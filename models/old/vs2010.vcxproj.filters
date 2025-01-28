@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="RBRBR_PROJECT_TOOLS_VERSION" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="RBRBRBR_NAMESPACE_NAME_RBRBRBR.RBRBRBR_MODULE_NAME_RBRBRBR">
+      <UniqueIdentifier>RBRBR_FILTER_PROJECT_NAME_GUID_RBRBRBR</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\RBRBRBR_NAMESPACE_NAME_RBRBRBR.RBRBRBR_MODULE_NAME_RBRBRBR\main.cpp">
+      <Filter>RBRBRBR_NAMESPACE_NAME_RBRBRBR.RBRBRBR_MODULE_NAME_RBRBRBR</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\RBRBRBR_NAMESPACE_NAME_RBRBRBR.RBRBRBR_MODULE_NAME_RBRBRBR\main.hpp">
+      <Filter>RBRBRBR_NAMESPACE_NAME_RBRBRBR.RBRBRBR_MODULE_NAME_RBRBRBR</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,74 @@
+# TODO: customize the project here
+CPPC=RBRBR_CPPC_RBRBRBR
+CPPC_VERSION_OPTION=RBRBR_CPPC_VERSION_OPTION_RBRBRBR
+CPPC_VERSION_DIRECTORY=RBRBR_CPPC_VERSION_DIRECTORY_RBRBRBR
+NAMESPACE_NAME=RBRBRBR_NAMESPACE_NAME_RBRBRBR
+MODULE_NAME=RBRBRBR_MODULE_NAME_RBRBRBR
+
+# TODO: Enter the files here
+#   remember that "../" will be prepended as the Makefile is inside a directory
+#       inside the root
+#   so you need to put the full path from there.
+HEADERS=$(NAMESPACE_NAME).$(MODULE_NAME)/main.hpp
+SOURCES=$(NAMESPACE_NAME).$(MODULE_NAME)/main.cpp
+
+
+
+# macro definitions
+CPPC_CFLAGS=-c -Wall $(CPPC_VERSION_OPTION)
+CPPC_LFLAGS=
+DIRECTORY_BASE=..
+DIRECTORY_OBJ=__obj/$(NAMESPACE_NAME).$(MODULE_NAME)/gcc_$(CPPC_VERSION_DIRECTORY)
+DIRECTORY_BIN=../__bin/gcc_$(CPPC_VERSION_DIRECTORY)
+PROJECT_EXE=$(NAMESPACE_NAME).$(MODULE_NAME).exe
+
+FILE_CONMANIP=RBRBR_FILE_CONMANIP_RBRBRBR
+FILE_GTEST=RBRBR_FILE_GTEST_RBRBRBR
+FILE_DEPENDENCIES=RBRBR_FILE_DEPENDENCIES_RBRBRBR
+FILE_DEPENDENCIES_FULL=RBRBR_FILE_DEPENDENCIES_FULL_RBRBRBR
+
+
+HEADERS_FULL=$(foreach header,$(HEADERS),$(DIRECTORY_BASE)/$(header))
+
+
+OBJECTS_TMP=$(subst .cpp,.obj,$(SOURCES))
+OBJECTS=$(foreach obj,$(OBJECTS_TMP),$(DIRECTORY_OBJ)/$(obj))
+OBJECTS_FULL=$(foreach file,$(OBJECTS),$(DIRECTORY_BASE)/$(file))
+
+
+all: create_directories object_files executable_file launching_executable_file
+
+
+clean:
+	rm -f $(DIRECTORY_BIN)/$(PROJECT_EXE) $(OBJECTS_FULL)
+
+
+create_directories :
+	mkdir -p $(DIRECTORY_BASE)/$(DIRECTORY_OBJ)/$(NAMESPACE_NAME).$(MODULE_NAME)
+	mkdir -p $(DIRECTORY_BIN)
+
+
+launching_executable_file :
+	$(DIRECTORY_BIN)/$(PROJECT_EXE)
+
+
+executable_file : $(DIRECTORY_BIN)/$(PROJECT_EXE)
+
+
+object_files : $(OBJECTS_FULL)
+
+
+$(DIRECTORY_BIN)/$(PROJECT_EXE) : $(OBJECTS_FULL)
+	$(CPPC) $(CPPC_LFLAGS) $^ -o $@
+
+
+$(FILE_DEPENDENCIES_FULL) :
+
+
+$(HEADERS_FULL) :
+
+	
+$(DIRECTORY_BASE)/$(DIRECTORY_OBJ)/%.obj : $(DIRECTORY_BASE)/%.cpp $(FILE_DEPENDENCIES_FULL) $(HEADERS_FULL)
+	$(CPPC) $(CPPC_CFLAGS) -I.. $< -o $@
+
+

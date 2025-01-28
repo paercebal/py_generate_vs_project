@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="RBRBR_PROJECT_TOOLS_VERSION" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDev|Win32">
+      <Configuration>ReleaseDev</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDev|x64">
+      <Configuration>ReleaseDev</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\RBRBRBR_NAMESPACE_NAME_RBRBRBR.RBRBRBR_MODULE_NAME_RBRBRBR\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\RBRBRBR_NAMESPACE_NAME_RBRBRBR.RBRBRBR_MODULE_NAME_RBRBRBR\main.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>RBRBR_PROJECT_GUID_RBRBRBR</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RBRBRBR_NAMESPACE_NAME_RBRBRBR_RBRBRBR_MODULE_NAME_RBRBRBR</RootNamespace>
+    RBRBRBR_WINDOWS_TARGET_PLATFORM_VERSION_RBRBRBR
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+RBRBR_PROJECT_PLATFORM_TOOLSET
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+RBRBR_PROJECT_PLATFORM_TOOLSET
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='ReleaseDev'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+RBRBR_PROJECT_PLATFORM_TOOLSET
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir Condition="'$(Configuration)'=='ReleaseDev'">..\__bin\RBRBR_PROJECT_PLATFORM_FOLDER_NAME__$(Platform)__Release\</OutDir>
+    <OutDir Condition="'$(Configuration)'!='ReleaseDev'">..\__bin\RBRBR_PROJECT_PLATFORM_FOLDER_NAME__$(Platform)__$(Configuration)\</OutDir>
+    <IntDir>..\__obj\$(ProjectName)\RBRBR_PROJECT_PLATFORM_FOLDER_NAME__$(Platform)__$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;RBRBR_SUBSYSTEM_PREPROCESSOR_DEFINITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..</AdditionalIncludeDirectories>
+RBRBR_LANGUAGE_STANDARD_RBRBR
+RBRBR_SDL_CHECK_RBRBR
+RBRBR_CONFORMANCE_MODE_RBRBR
+    </ClCompile>
+    <Link>
+      <SubSystem>RBRBR_SUBSYSTEM_VALUE</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;RBRBR_SUBSYSTEM_PREPROCESSOR_DEFINITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..</AdditionalIncludeDirectories>
+RBRBR_LANGUAGE_STANDARD_RBRBR
+RBRBR_SDL_CHECK_RBRBR
+RBRBR_CONFORMANCE_MODE_RBRBR
+    </ClCompile>
+    <Link>
+      <SubSystem>RBRBR_SUBSYSTEM_VALUE</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='ReleaseDev'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;RBRBR_SUBSYSTEM_PREPROCESSOR_DEFINITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+RBRBR_LANGUAGE_STANDARD_RBRBR
+RBRBR_SDL_CHECK_RBRBR
+RBRBR_CONFORMANCE_MODE_RBRBR
+    </ClCompile>
+    <Link>
+      <SubSystem>RBRBR_SUBSYSTEM_VALUE</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <OptimizeReferences>false</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(PAERCEBAL_VCPKG_DIR)\scripts\buildsystems\msbuild\vcpkg.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
