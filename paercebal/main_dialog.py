@@ -18,7 +18,7 @@ class main_dialog:
         self.root = tk.Tk()
         #self.root.geometry('300x220')
         #self.root.resizable(False, False)
-        self.root.title('Generate Visual Studio Module')
+        self.root.title('Generate Visual Studio Project')
 
         self.style = ttk.Style()
         self.style.configure("TFrame", background='#BBBBBB')
@@ -111,6 +111,11 @@ class main_dialog:
 
         # ========================================================================================
         current_row += 1
+        self.ck_save_configuration = ttk.Button(self.frm, text='Save Config', command=lambda: self.save_configuration_from_dialog())
+        self.ck_save_configuration.grid(column=0, row=current_row, columnspan=2, sticky="E")
+
+        # ========================================================================================
+        current_row += 1
         self.ck_create_module = ttk.Button(self.frm, text='Create Module', command=lambda: self.on_create_click())
         self.ck_create_module.grid(column=0, row=current_row, columnspan=2, sticky="E")
 
@@ -153,6 +158,18 @@ class main_dialog:
         pass
 
     def save_configuration_from_dialog(self):
+        data = paercebal.configuration.load_configuration(os.path.join(os.getcwd(), r'py_generate_vs_project.json'))
+
+        if 'parent_directories' not in data:
+            data['parent_directories'] = self.cb_parent_dir['values']
+        else:
+            data['parent_directories'].extend(self.cb_parent_dir['values'])
+
+        data['parent_directories'].insert(0, self.cb_parent_dir_variable.get())
+        data['parent_directories'] = list(dict.fromkeys(data['parent_directories']))
+        data['parent_directories'][0:10]
+        self.cb_parent_dir['values'] = data['parent_directories']
+        paercebal.configuration.save_configuration(os.path.join(os.getcwd(), r'py_generate_vs_project.json'), data)
         pass
 
 
