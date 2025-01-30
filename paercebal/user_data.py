@@ -17,6 +17,7 @@ class user_data:
         self.m_module_guid = uuid.uuid4()
         self.m_vcpkg_paercebal = True
         self.m_open_explorer = True
+        self.m_message_box_on_finish = True
         self.m_project_datas = paercebal.project_data.get_all_project_data()
 
     def update_solution_guid(self, p_uuid):

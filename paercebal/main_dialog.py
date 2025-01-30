@@ -1,8 +1,10 @@
+import os
 import tkinter as tk
 import uuid
 from tkinter import ttk
 from tkinter import messagebox
 from pathlib import Path
+import paercebal.configuration
 import paercebal.file_system
 import paercebal.file_text
 import subprocess
@@ -10,7 +12,7 @@ import subprocess
 
 # https://www.pythontutorial.net/tkinter/tkinter-combobox/
 
-class main_dialog():
+class main_dialog:
     def __init__(self, p_user_data):
         self.user_data = p_user_data
         self.root = tk.Tk()
@@ -59,7 +61,7 @@ class main_dialog():
         self.cb_parent_dir_variable = tk.StringVar()
         self.cb_parent_dir = ttk.Combobox(self.frm, width=40, textvariable=self.cb_parent_dir_variable)
         self.cb_parent_dir.grid(column=1, row=current_row, sticky="W")
-        self.cb_parent_dir['values'] = (r'D:\_rbr\dev\cpp')
+        self.cb_parent_dir['values'] = list(r'D:\_rbr\dev\cpp')
         self.cb_parent_dir.set(r'D:\_rbr\dev\cpp')
 
         # ========================================================================================
@@ -67,21 +69,24 @@ class main_dialog():
         ttk.Label(self.frm, text="Root Namespace:").grid(column=0, row=current_row, sticky="E")
         self.txt_root_namespace = tk.Text(self.frm, height=1, width=40)
         self.txt_root_namespace.grid(column=1, row=current_row, sticky="W")
-        self.txt_root_namespace.insert("1.0", "paercebal")
+        self.txt_root_namespace.delete(1.0, "end-1c")
+        self.txt_root_namespace.insert("end-1c", "ROOT_NAMESPACE")
 
         # ========================================================================================
         current_row += 1
         ttk.Label(self.frm, text="Application Name:").grid(column=0, row=current_row, sticky="E")
         self.txt_app_main_namespace = tk.Text(self.frm, height=1, width=40)
         self.txt_app_main_namespace.grid(column=1, row=current_row, sticky="W")
-        self.txt_app_main_namespace.insert("1.0", "my_app")
+        self.txt_app_main_namespace.delete(1.0, "end-1c")
+        self.txt_app_main_namespace.insert("end-1c", "my_app")
 
         # ========================================================================================
         current_row += 1
         ttk.Label(self.frm, text="Module Name:").grid(column=0, row=current_row, sticky="E")
         self.txt_module_sub_namespace = tk.Text(self.frm, height=1, width=40)
         self.txt_module_sub_namespace.grid(column=1, row=current_row, sticky="W")
-        self.txt_module_sub_namespace.insert("1.0", "my_module")
+        self.txt_module_sub_namespace.delete(1.0, "end-1c")
+        self.txt_module_sub_namespace.insert("end-1c", "my_module")
 
         # ========================================================================================
         current_row += 1
@@ -99,13 +104,60 @@ class main_dialog():
 
         # ========================================================================================
         current_row += 1
-        self.ck_open_explorer = ttk.Button(self.frm, text='Create Module', command=lambda: self.on_create_click())
-        self.ck_open_explorer.grid(column=0, row=current_row, columnspan=2, sticky="E")
-        self.ck_open_explorer_variable.set(True)
+        self.ck_message_box_on_finish_variable = tk.BooleanVar()
+        self.ck_message_box_on_finish = ttk.Checkbutton(self.frm, text='Open Explorer', variable=self.ck_message_box_on_finish_variable)
+        self.ck_message_box_on_finish.grid(column=0, row=current_row, columnspan=2, sticky="E")
+        self.ck_message_box_on_finish_variable.set(True)
 
+        # ========================================================================================
+        current_row += 1
+        self.ck_create_module = ttk.Button(self.frm, text='Create Module', command=lambda: self.on_create_click())
+        self.ck_create_module.grid(column=0, row=current_row, columnspan=2, sticky="E")
 
         # ========================================================================================
         # ========================================================================================
+        self.load_configuration_into_dialog()
+
+
+    # ========================================================================================
+    # ========================================================================================
+
+    def load_configuration_into_dialog(self):
+        data = paercebal.configuration.load_configuration(os.path.join(os.getcwd(), r'py_generate_vs_project.json'))
+
+        if 'parent_directories' in data:
+            dirs = data['parent_directories']
+            self.cb_parent_dir['values'] = dirs
+
+        if 'root_namespace' in data:
+            self.txt_root_namespace.delete(1.0, "end-1c")
+            self.txt_root_namespace.insert("end-1c", str(data['root_namespace']))
+
+        if 'application_name' in data:
+            self.txt_app_main_namespace.delete(1.0, "end-1c")
+            self.txt_app_main_namespace.insert("end-1c", str(data['application_name']))
+
+        if 'module_name' in data:
+            self.txt_module_sub_namespace.delete(1.0, "end-1c")
+            self.txt_module_sub_namespace.insert("end-1c", str(data['module_name']))
+
+        if 'explicit_vcpkg_paercebal' in data:
+            self.ck_vcpkg_paercebal_variable.set(data['explicit_vcpkg_paercebal'])
+
+        if 'open_explorer_on_finish' in data:
+            self.ck_open_explorer_variable.set(data['open_explorer_on_finish'])
+
+        if 'message_box_on_finish' in data:
+            self.ck_message_box_on_finish_variable.set(data['message_box_on_finish'])
+
+        pass
+
+    def save_configuration_from_dialog(self):
+        pass
+
+
+    # ========================================================================================
+    # ========================================================================================
 
     def fill_and_check_user_data(self):
         self.user_data.m_module_type = self.rb_module_type_variable.get()
@@ -115,15 +167,16 @@ class main_dialog():
         self.user_data.m_module_name = self.txt_module_sub_namespace.get("1.0",'end-1c')
         self.user_data.m_vcpkg_paercebal = self.ck_vcpkg_paercebal_variable.get()
         self.user_data.m_open_explorer = self.ck_open_explorer_variable.get()
+        self.user_data.m_message_box_on_finish = self.ck_message_box_on_finish_variable.get()
         return True
 
     def on_create_click(self):
         if self.fill_and_check_user_data():
             self.user_data.m_module_guid = uuid.uuid4()
-            self.create_directories();
-            self.generate_files();
-            self.open_explorer();
-            messagebox.showinfo(title='Success', message='Visual Studio Module Generated', type=messagebox.OK)
+            self.create_directories()
+            self.generate_files()
+            self.open_explorer()
+            self.open_message_box()
 
     def create_directories(self):
         paercebal.file_system.create_directory_structure(self.user_data)
@@ -138,6 +191,10 @@ class main_dialog():
     def open_explorer(self):
         if self.user_data.m_open_explorer:
             subprocess.Popen('explorer "' + self.user_data.get_solution_directory() + '"')
+
+    def open_message_box(self):
+        if self.user_data.m_message_box_on_finish:
+            messagebox.showinfo(title='Success', message='Visual Studio Module Generated', type=messagebox.OK)
 
     def main_loop(self):
         self.root.mainloop()
