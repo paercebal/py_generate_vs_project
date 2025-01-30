@@ -1,5 +1,6 @@
 import os
 import sys
+import paercebal.configuration
 import paercebal.file_text
 import paercebal.main_dialog
 import paercebal.user_data
@@ -14,7 +15,7 @@ def test_define(p_text):
 def main() -> int:
     if True:
         ud = paercebal.user_data.user_data()
-        ud.m_models_directory = os.path.join(os.getcwd(), "models")
+        ud.m_models_directories = os.path.join(os.getcwd(), "models")
         md = paercebal.main_dialog.main_dialog(ud)
         md.main_loop()
     else:
@@ -23,6 +24,8 @@ def main() -> int:
         test_define('AbcDEfg')
         test_define('Abc_Def')
         test_define('Abc_DEfg')
+        print(paercebal.configuration.load_configuration(os.path.join(os.getcwd(), r'py_generate_vs_project.json')))
+
     return 0
 
 if __name__ == '__main__':

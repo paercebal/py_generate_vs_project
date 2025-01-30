@@ -1,5 +1,6 @@
-# .lnk files
+# misc files/directories
 *.lnk
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

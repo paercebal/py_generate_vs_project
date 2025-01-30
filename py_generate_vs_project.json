@@ -1,0 +1,9 @@
+{
+     "parent_directories"              : ["D:\\_rbr\\dev\\cpp", "D:\\_rbr\\dev\\cpp2"]
+   , "root_namespace"                  : "paercebal"
+   , "application_name"                : "my_app"
+   , "module_name"                     : "my_module"
+   , "explicit_vcpkg_paercebal"        : false
+   , "open_explorer_on_finish"         : true
+   , "message_box_on_finish"           : false
+}
