@@ -24,6 +24,7 @@ class main_dialog:
         self.style.configure("TFrame", background='#BBBBBB')
         self.style.configure("TLabel", background='#BBBBBB')
         self.style.configure("TCheckbutton", background='#BBBBBB')
+        self.style.configure("TPanedWindow", background='#BBBBBB')
         self.style.configure(".", font=('Helvetica', 12))
 
         self.frm = ttk.Frame(self.root, padding=10)
@@ -49,9 +50,13 @@ class main_dialog:
         self.pw_module_type.grid(column=1, row=current_row, sticky="W")
         self.rb_module_type_variable = tk.StringVar()
         self.pw_module_type.add(ttk.Radiobutton(self.frm, text='Console EXE', value='ConsoleEXE', style='Toolbutton', variable=self.rb_module_type_variable))
+        self.pw_module_type.add(ttk.Separator(self.frm, orient='vertical'))
         #self.pw_module_type.add(ttk.Radiobutton(self.frm, text='WinAPI EXE', value='WinApiEXE', style='Toolbutton', variable=self.rb_module_type_variable))
+        #self.pw_module_type.add(ttk.Separator(self.frm, orient='vertical'))
         self.pw_module_type.add(ttk.Radiobutton(self.frm, text='SFML EXE', value='SFMLEXE', style='Toolbutton', variable=self.rb_module_type_variable))
+        self.pw_module_type.add(ttk.Separator(self.frm, orient='vertical'))
         self.pw_module_type.add(ttk.Radiobutton(self.frm, text='DLL', value='DLL', style='Toolbutton', variable=self.rb_module_type_variable))
+        self.pw_module_type.add(ttk.Separator(self.frm, orient='vertical'))
         self.pw_module_type.add(ttk.Radiobutton(self.frm, text='GTest EXE', value='GTestEXE', style='Toolbutton', variable=self.rb_module_type_variable))
         self.rb_module_type_variable.set('ConsoleEXE')
 
@@ -98,14 +103,14 @@ class main_dialog:
         # ========================================================================================
         current_row += 1
         self.ck_open_explorer_variable = tk.BooleanVar()
-        self.ck_open_explorer = ttk.Checkbutton(self.frm, text='Open Explorer', variable=self.ck_open_explorer_variable)
+        self.ck_open_explorer = ttk.Checkbutton(self.frm, text='Open Explorer on finish', variable=self.ck_open_explorer_variable)
         self.ck_open_explorer.grid(column=0, row=current_row, columnspan=2, sticky="E")
         self.ck_open_explorer_variable.set(True)
 
         # ========================================================================================
         current_row += 1
         self.ck_message_box_on_finish_variable = tk.BooleanVar()
-        self.ck_message_box_on_finish = ttk.Checkbutton(self.frm, text='Open Explorer', variable=self.ck_message_box_on_finish_variable)
+        self.ck_message_box_on_finish = ttk.Checkbutton(self.frm, text='MessageBox on finish', variable=self.ck_message_box_on_finish_variable)
         self.ck_message_box_on_finish.grid(column=0, row=current_row, columnspan=2, sticky="E")
         self.ck_message_box_on_finish_variable.set(True)
 

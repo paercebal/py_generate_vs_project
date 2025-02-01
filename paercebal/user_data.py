@@ -295,3 +295,52 @@ class user_data:
         s += self.get_relative_private_directory_for_includes()
         return s
 
+    def get_winmain_redirector_to_main(self):
+        s = ''
+        s += '#if defined(_WIN32)\n\n'
+        s += '#include <windows.h>\n\n'
+        s += 'extern int main(int argc, char* argv[]);\n\n'
+        s += 'int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)\n'
+        s += '{\n'
+        s += '   return main(__argc, __argv);\n'
+        s += '}\n\n'
+        s += '#endif // _WIN32\n'
+        return s
+
+    def get_gtest_main_content(self):
+        s = ''
+        s += '   ::testing::InitGoogleTest(&p_argc, p_argv);\n'
+        s += '   return RUN_ALL_TESTS();'
+        return s
+
+    def get_console_main_content(self):
+        s = ''
+        s += '   std::cout << "Hello World";'
+        return s
+
+    def get_sfml2_main_content(self):
+        s = ''
+        s += '   sf::Window window;\n'
+        s += '   window.create(sf::VideoMode(800, 600), "My SFML2 window");\n'
+        s += '   window.setVerticalSyncEnabled(true); // call it once, after creating the window\n'
+        s += '   window.setFramerateLimit(60); // call it once, after creating the window\n'
+        s += '\n'
+        s += '   while (window.isOpen())\n'
+        s += '   {\n'
+        s += '      // check all the window\'s events that were triggered since the last iteration of the loop\n'
+        s += '      sf::Event event;\n'
+        s += '\n'
+        s += '      while (window.pollEvent(event))\n'
+        s += '      {\n'
+        s += '         // "close requested" event: we close the window\n'
+        s += '         if (event.type == sf::Event::Closed)\n'
+        s += '         {\n'
+        s += '            window.close();\n'
+        s += '         }\n'
+        s += '      }\n'
+        s += '   }\n'
+        s += '\n'
+        s += '   return 0;'
+        return s
+
+

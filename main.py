@@ -15,7 +15,7 @@ def test_define(p_text):
 def main() -> int:
     if True:
         ud = paercebal.user_data.user_data()
-        ud.m_models_directories = os.path.join(os.getcwd(), "models")
+        ud.m_models_directory = os.path.join(os.getcwd(), "models")
         md = paercebal.main_dialog.main_dialog(ud)
         md.main_loop()
     else:
