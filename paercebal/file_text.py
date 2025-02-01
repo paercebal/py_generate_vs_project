@@ -69,26 +69,29 @@ def create_main_source(p_user_data):
     with open(dst, 'r') as file:
         data = file.read()
 
-    data = re.sub('RBRBRBR_MODULE_MACRO_PREFIX_RBRBRBR', macro_prefix, data)
-    data = re.sub('RBRBRBR_MODULE_CPP_NAMESPACE_RBRBRBR', module_cpp_namespace, data)
+    data = data.replace('RBRBRBR_MODULE_MACRO_PREFIX_RBRBRBR', macro_prefix)
+    data = data.replace('RBRBRBR_MODULE_CPP_NAMESPACE_RBRBRBR', module_cpp_namespace)
 
     if p_user_data.is_module_a("ConsoleEXE"):
-        data = re.sub('RBRBRBR_MAIN_FILE_HEADER_INCLUDE_RBRBRBR', dst_header_include, data)
-        data = re.sub('RBRBRBR_MAIN_FILE_SFML_INCLUDE_RBRBRBR', '', data)
-        data = re.sub('RBRBRBR_MAIN_FILE_GTEST_INCLUDE_RBRBRBR', '', data)
-        data = re.sub('RBRBRBR_MAIN_FUNCTION_BODY_RBRBRBR', '   std::cout << "Hello World";', data)
+        data = data.replace('RBRBRBR_MAIN_FILE_HEADER_INCLUDE_RBRBRBR', dst_header_include)
+        data = data.replace('RBRBRBR_MAIN_FILE_SFML_INCLUDE_RBRBRBR', '')
+        data = data.replace('RBRBRBR_MAIN_FILE_GTEST_INCLUDE_RBRBRBR', '')
+        data = data.replace('RBRBRBR_WINMAIN_REDIRECTOR_TO_MAIN_RBRBRBR', '')
+        data = data.replace('RBRBRBR_MAIN_FUNCTION_BODY_RBRBRBR', p_user_data.get_console_main_content())
     elif p_user_data.is_module_a("SFMLEXE"):
-        data = re.sub('RBRBRBR_MAIN_FILE_HEADER_INCLUDE_RBRBRBR', dst_header_include, data)
-        data = re.sub('RBRBRBR_MAIN_FILE_SFML_INCLUDE_RBRBRBR', '#include <SFML/Graphics.hpp>', data)
-        data = re.sub('RBRBRBR_MAIN_FILE_GTEST_INCLUDE_RBRBRBR', '', data)
-        data = re.sub('RBRBRBR_MAIN_FUNCTION_BODY_RBRBRBR', '   std::cout << "Hello World";', data)
+        data = data.replace('RBRBRBR_MAIN_FILE_HEADER_INCLUDE_RBRBRBR', dst_header_include)
+        data = data.replace('RBRBRBR_MAIN_FILE_SFML_INCLUDE_RBRBRBR', '#include <SFML/Graphics.hpp>')
+        data = data.replace('RBRBRBR_MAIN_FILE_GTEST_INCLUDE_RBRBRBR', '')
+        data = data.replace('RBRBRBR_WINMAIN_REDIRECTOR_TO_MAIN_RBRBRBR', p_user_data.get_winmain_redirector_to_main())
+        data = data.replace('RBRBRBR_MAIN_FUNCTION_BODY_RBRBRBR', p_user_data.get_sfml2_main_content())
     elif p_user_data.is_module_a("GTestEXE"):
-        data = re.sub('RBRBRBR_MAIN_FILE_HEADER_INCLUDE_RBRBRBR', dst_header_include, data)
-        data = re.sub('RBRBRBR_MAIN_FILE_SFML_INCLUDE_RBRBRBR', '', data)
-        data = re.sub('RBRBRBR_MAIN_FILE_GTEST_INCLUDE_RBRBRBR', '#include <gtest/gtest.h>', data)
-        data = re.sub('RBRBRBR_MAIN_FUNCTION_BODY_RBRBRBR', '   ::testing::InitGoogleTest(&p_argc, p_argv);\n   return RUN_ALL_TESTS();', data)
+        data = data.replace('RBRBRBR_MAIN_FILE_HEADER_INCLUDE_RBRBRBR', dst_header_include)
+        data = data.replace('RBRBRBR_MAIN_FILE_SFML_INCLUDE_RBRBRBR', '')
+        data = data.replace('RBRBRBR_MAIN_FILE_GTEST_INCLUDE_RBRBRBR', '#include <gtest/gtest.h>')
+        data = data.replace('RBRBRBR_WINMAIN_REDIRECTOR_TO_MAIN_RBRBRBR', '')
+        data = data.replace('RBRBRBR_MAIN_FUNCTION_BODY_RBRBRBR', p_user_data.get_gtest_main_content())
     elif p_user_data.is_module_a("DLL"):
-        data = re.sub('RBRBRBR_MAIN_FILE_HEADER_INCLUDE_RBRBRBR', dst_header_include, data)
+        data = data.replace('RBRBRBR_MAIN_FILE_HEADER_INCLUDE_RBRBRBR', dst_header_include)
 
     with open(dst, "w") as file:
         file.write(data)
