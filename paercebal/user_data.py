@@ -76,9 +76,9 @@ class user_data:
 
     def get_base_project_file_solution_name(self, p_KEY):
         if len(self.m_root_namespace) > 0:
-            return os.path.join(self.get_solution_directory(), p_KEY, self.m_root_namespace + '.' + self.m_application_name + '.sln')
+            return os.path.join(self.get_solution_directory(), p_KEY, '_' + self.m_root_namespace + '.' + self.m_application_name + '.sln')
         else:
-            return os.path.join(self.get_solution_directory(), p_KEY, self.m_application_name + '.sln')
+            return os.path.join(self.get_solution_directory(), p_KEY, '_' + self.m_application_name + '.sln')
 
     def get_project_file_project_name(self):
         if len(self.m_root_namespace) > 0:

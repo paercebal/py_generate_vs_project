@@ -205,30 +205,50 @@ def create_file_vcxproj_filters(p_user_data):
 
         shutil.copy(src, dst)
 
-        filter_name = p_user_data.get_vcxproj_root_namespace()
-        unique_identifier = str(uuid.uuid4())
+        unique_identifier_private = str(uuid.uuid4())
+        unique_identifier_public = str(uuid.uuid4())
+
+        filter_name_public = p_user_data.get_project_file_project_name() + ' (public)'
+        filter_name_private = p_user_data.get_project_file_project_name() + ' (private)'
+        unique_identifier_public = str(uuid.uuid4())
+        unique_identifier_private = str(uuid.uuid4())
+
+        src_file_filter_name = filter_name_private
+
+        if p_user_data.is_module_library():
+            src_header_filter_name = filter_name_public
+        else:
+            src_header_filter_name = filter_name_private
 
         files_declared_in_vcxproj = ''
         files_declared_in_vcxproj += '  <ItemGroup>\n'
-        files_declared_in_vcxproj += '    <Filter Include="' + filter_name + '">\n'
-        files_declared_in_vcxproj += '      <UniqueIdentifier>' + unique_identifier + '</UniqueIdentifier>\n'
+        files_declared_in_vcxproj += '    <Filter Include="' + filter_name_private + '">\n'
+        files_declared_in_vcxproj += '      <UniqueIdentifier>' + unique_identifier_private + '</UniqueIdentifier>\n'
         files_declared_in_vcxproj += '    </Filter>\n'
         files_declared_in_vcxproj += '  </ItemGroup>\n'
+
+        if p_user_data.is_module_library():
+            files_declared_in_vcxproj += '  <ItemGroup>\n'
+            files_declared_in_vcxproj += '    <Filter Include="' + filter_name_public + '">\n'
+            files_declared_in_vcxproj += '      <UniqueIdentifier>' + unique_identifier_public + '</UniqueIdentifier>\n'
+            files_declared_in_vcxproj += '    </Filter>\n'
+            files_declared_in_vcxproj += '  </ItemGroup>\n'
+
         files_declared_in_vcxproj += '  <ItemGroup>\n'
         files_declared_in_vcxproj += '    <ClCompile Include="..\\' + src_file + '">\n'
-        files_declared_in_vcxproj += '      <Filter>' + filter_name + '</Filter>\n'
+        files_declared_in_vcxproj += '      <Filter>' + src_file_filter_name + '</Filter>\n'
         files_declared_in_vcxproj += '    </ClCompile>\n'
         files_declared_in_vcxproj += '  </ItemGroup>\n'
         files_declared_in_vcxproj += '  <ItemGroup>\n'
         files_declared_in_vcxproj += '    <ClInclude Include="..\\' + src_header + '">\n'
-        files_declared_in_vcxproj += '      <Filter>' + filter_name + '</Filter>\n'
+        files_declared_in_vcxproj += '      <Filter>' + src_header_filter_name + '</Filter>\n'
         files_declared_in_vcxproj += '    </ClInclude>\n'
         files_declared_in_vcxproj += '  </ItemGroup>'
 
         with open(dst, 'r') as file:
             data = file.read()
 
-            data = re.sub('RBRBR_PROJECT_TOOLS_VERSION_RBRBR', v.m_vcproj_project_tools_version, data)
+            data = data.replace('RBRBR_PROJECT_TOOLS_VERSION_RBRBR', v.m_vcproj_project_tools_version)
             data = data.replace('RBRBRBR_VCXPROJ_FILTERS_CONTENT_RBRBRBR', files_declared_in_vcxproj)
 
         with open(dst, "w") as file:
