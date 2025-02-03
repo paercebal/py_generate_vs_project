@@ -12,6 +12,15 @@ import subprocess
 
 # https://www.pythontutorial.net/tkinter/tkinter-combobox/
 
+
+def get_textbox(p_textbox):
+    return p_textbox.get("1.0",'end-1c')
+
+def set_textbox(p_textbox, p_text):
+    p_textbox.delete(1.0, "end-1c")
+    p_textbox.insert("end-1c", p_text)
+
+
 class main_dialog:
     def __init__(self, p_user_data):
         self.user_data = p_user_data
@@ -33,21 +42,10 @@ class main_dialog:
         current_row = -1
 
         # ========================================================================================
-        #current_row += 1
-        #ttk.Label(frm, text="Hello World!").grid(column=0, row=current_row)
-        #ttk.Button(frm, text="Quit", command=root.destroy).grid(column=1, row=current_row)
-
-        # ========================================================================================
         current_row += 1
         ttk.Label(self.frm, text="Module Type:").grid(column=0, row=current_row, sticky="E")
-        #self.cb_project_type_current = tk.StringVar()
-        #self.cb_project_type = ttk.Combobox(self.frm, textvariable=cb_project_type_current)
-        #self.cb_project_type.grid(column=1, row=current_row)
-        #self.cb_project_type["values"] = ("Console", "DLL")
-        #self.cb_project_type.set("Console")
-        #self.cb_project_type["state"] = "readonly"
         self.pw_module_type = ttk.PanedWindow(self.frm, orient='horizontal')
-        self.pw_module_type.grid(column=1, row=current_row, sticky="W")
+        self.pw_module_type.grid(column=1, row=current_row, columnspan=2, sticky="W")
         self.rb_module_type_variable = tk.StringVar()
         self.pw_module_type.add(ttk.Radiobutton(self.frm, text='Console EXE', value='ConsoleEXE', style='Toolbutton', variable=self.rb_module_type_variable))
         self.pw_module_type.add(ttk.Separator(self.frm, orient='vertical'))
@@ -58,71 +56,109 @@ class main_dialog:
         self.pw_module_type.add(ttk.Radiobutton(self.frm, text='DLL', value='DLL', style='Toolbutton', variable=self.rb_module_type_variable))
         self.pw_module_type.add(ttk.Separator(self.frm, orient='vertical'))
         self.pw_module_type.add(ttk.Radiobutton(self.frm, text='GTest EXE', value='GTestEXE', style='Toolbutton', variable=self.rb_module_type_variable))
-        self.rb_module_type_variable.set('ConsoleEXE')
 
         # ========================================================================================
         current_row += 1
         ttk.Label(self.frm, text="Parent Directory:").grid(column=0, row=current_row, sticky="E")
         self.cb_parent_dir_variable = tk.StringVar()
         self.cb_parent_dir = ttk.Combobox(self.frm, width=40, textvariable=self.cb_parent_dir_variable)
-        self.cb_parent_dir.grid(column=1, row=current_row, sticky="W")
+        self.cb_parent_dir.grid(column=1, row=current_row, columnspan=2, sticky="W")
         self.cb_parent_dir['values'] = list(r'D:\_rbr\dev\cpp')
-        self.cb_parent_dir.set(r'D:\_rbr\dev\cpp')
+
+        # ========================================================================================
+        current_row += 1
+        ttk.Label(self.frm, text="Solution Behaviour:").grid(column=0, row=current_row, sticky="E")
+        self.pw_solution_behaviour = ttk.PanedWindow(self.frm, orient='horizontal')
+        self.pw_solution_behaviour.grid(column=1, row=current_row, columnspan=2, sticky="W")
+        self.rb_solution_behaviour_variable = tk.BooleanVar()
+        self.pw_solution_behaviour.add(ttk.Radiobutton(self.frm, text='Default', value=False, style='Toolbutton', variable=self.rb_solution_behaviour_variable))
+        self.pw_solution_behaviour.add(ttk.Separator(self.frm, orient='vertical'))
+        self.pw_solution_behaviour.add(ttk.Radiobutton(self.frm, text='Inject', value=True, style='Toolbutton', variable=self.rb_solution_behaviour_variable))
+
+        def on_behaviour_change(*args):
+            if self.rb_solution_behaviour_variable.get():
+                self.txt_root_namespace_injected.configure(state=tk.NORMAL, bg='white')
+                self.txt_app_main_namespace_injected.configure(state=tk.NORMAL, bg='white')
+                self.txt_module_sub_namespace_injected.configure(state=tk.NORMAL, bg='white')
+            else:
+                self.txt_root_namespace_injected.configure(state=tk.DISABLED, bg='grey60')
+                self.txt_app_main_namespace_injected.configure(state=tk.DISABLED, bg='grey60')
+                self.txt_module_sub_namespace_injected.configure(state=tk.DISABLED, bg='grey60')
+
+        self.rb_solution_behaviour_variable.trace_add('write', on_behaviour_change)
+
+        # ========================================================================================
+        current_row += 1
+        ttk.Label(self.frm, text=" ").grid(column=0, row=current_row, sticky="E")
+        ttk.Label(self.frm, text="Project:").grid(column=1, row=current_row)
+        ttk.Label(self.frm, text="Injected into:").grid(column=2, row=current_row)
 
         # ========================================================================================
         current_row += 1
         ttk.Label(self.frm, text="Root Namespace:").grid(column=0, row=current_row, sticky="E")
-        self.txt_root_namespace = tk.Text(self.frm, height=1, width=40)
-        self.txt_root_namespace.grid(column=1, row=current_row, sticky="W")
-        self.txt_root_namespace.delete(1.0, "end-1c")
-        self.txt_root_namespace.insert("end-1c", "ROOT_NAMESPACE")
+        self.txt_root_namespace = tk.Text(self.frm, height=1, width=20)
+        self.txt_root_namespace.grid(column=1, row=current_row, columnspan=1, sticky="W")
+        self.txt_root_namespace_injected = tk.Text(self.frm, height=1, width=20)
+        self.txt_root_namespace_injected.grid(column=2, row=current_row, columnspan=1, sticky="W")
 
         # ========================================================================================
         current_row += 1
         ttk.Label(self.frm, text="Application Name:").grid(column=0, row=current_row, sticky="E")
-        self.txt_app_main_namespace = tk.Text(self.frm, height=1, width=40)
-        self.txt_app_main_namespace.grid(column=1, row=current_row, sticky="W")
-        self.txt_app_main_namespace.delete(1.0, "end-1c")
-        self.txt_app_main_namespace.insert("end-1c", "my_app")
+        self.txt_app_main_namespace = tk.Text(self.frm, height=1, width=20)
+        self.txt_app_main_namespace.grid(column=1, row=current_row, columnspan=1, sticky="W")
+        self.txt_app_main_namespace_injected = tk.Text(self.frm, height=1, width=20)
+        self.txt_app_main_namespace_injected.grid(column=2, row=current_row, columnspan=1, sticky="W")
 
         # ========================================================================================
         current_row += 1
         ttk.Label(self.frm, text="Module Name:").grid(column=0, row=current_row, sticky="E")
-        self.txt_module_sub_namespace = tk.Text(self.frm, height=1, width=40)
-        self.txt_module_sub_namespace.grid(column=1, row=current_row, sticky="W")
-        self.txt_module_sub_namespace.delete(1.0, "end-1c")
-        self.txt_module_sub_namespace.insert("end-1c", "my_module")
+        self.txt_module_sub_namespace = tk.Text(self.frm, height=1, width=20)
+        self.txt_module_sub_namespace.grid(column=1, row=current_row, columnspan=1, sticky="W")
+        self.txt_module_sub_namespace_injected = tk.Text(self.frm, height=1, width=20)
+        self.txt_module_sub_namespace_injected.grid(column=2, row=current_row, columnspan=1, sticky="W")
 
         # ========================================================================================
         current_row += 1
         self.ck_vcpkg_paercebal_variable = tk.BooleanVar()
         self.ck_vcpkg_paercebal = ttk.Checkbutton(self.frm, text='Explicit VCPKG/PAERCEBAL', variable=self.ck_vcpkg_paercebal_variable)
-        self.ck_vcpkg_paercebal.grid(column=0, row=current_row, columnspan=2, sticky="E")
-        self.ck_vcpkg_paercebal_variable.set(True)
+        self.ck_vcpkg_paercebal.grid(column=0, row=current_row, columnspan=3, sticky="E")
 
         # ========================================================================================
         current_row += 1
         self.ck_open_explorer_variable = tk.BooleanVar()
         self.ck_open_explorer = ttk.Checkbutton(self.frm, text='Open Explorer on finish', variable=self.ck_open_explorer_variable)
-        self.ck_open_explorer.grid(column=0, row=current_row, columnspan=2, sticky="E")
-        self.ck_open_explorer_variable.set(True)
+        self.ck_open_explorer.grid(column=0, row=current_row, columnspan=3, sticky="E")
 
         # ========================================================================================
         current_row += 1
         self.ck_message_box_on_finish_variable = tk.BooleanVar()
         self.ck_message_box_on_finish = ttk.Checkbutton(self.frm, text='MessageBox on finish', variable=self.ck_message_box_on_finish_variable)
-        self.ck_message_box_on_finish.grid(column=0, row=current_row, columnspan=2, sticky="E")
-        self.ck_message_box_on_finish_variable.set(True)
+        self.ck_message_box_on_finish.grid(column=0, row=current_row, columnspan=3, sticky="E")
 
         # ========================================================================================
         current_row += 1
         self.ck_save_configuration = ttk.Button(self.frm, text='Save Config', command=lambda: self.save_configuration_from_dialog())
-        self.ck_save_configuration.grid(column=0, row=current_row, columnspan=2, sticky="E")
+        self.ck_save_configuration.grid(column=0, row=current_row, columnspan=3, sticky="E")
 
         # ========================================================================================
         current_row += 1
         self.ck_create_module = ttk.Button(self.frm, text='Create Module', command=lambda: self.on_create_click())
-        self.ck_create_module.grid(column=0, row=current_row, columnspan=2, sticky="E")
+        self.ck_create_module.grid(column=0, row=current_row, columnspan=3, sticky="E")
+
+        # ========================================================================================
+        # ========================================================================================
+        self.rb_module_type_variable.set('ConsoleEXE')
+        self.cb_parent_dir.set(r'D:\_rbr\dev\cpp')
+        self.rb_solution_behaviour_variable.set(False)
+        self.ck_vcpkg_paercebal_variable.set(True)
+        self.ck_open_explorer_variable.set(True)
+        self.ck_message_box_on_finish_variable.set(True)
+        set_textbox(self.txt_root_namespace, "ROOT_NAMESPACE")
+        set_textbox(self.txt_app_main_namespace, "my_app")
+        set_textbox(self.txt_module_sub_namespace, "my_module")
+        set_textbox(self.txt_root_namespace_injected, "ROOT_NAMESPACE_INJ")
+        set_textbox(self.txt_app_main_namespace_injected, "my_app_inj")
+        set_textbox(self.txt_module_sub_namespace_injected, "my_module_inj")
 
         # ========================================================================================
         # ========================================================================================
@@ -140,16 +176,22 @@ class main_dialog:
             self.cb_parent_dir['values'] = dirs
 
         if 'root_namespace' in data:
-            self.txt_root_namespace.delete(1.0, "end-1c")
-            self.txt_root_namespace.insert("end-1c", str(data['root_namespace']))
+            set_textbox(self.txt_root_namespace, str(data['root_namespace']))
 
         if 'application_name' in data:
-            self.txt_app_main_namespace.delete(1.0, "end-1c")
-            self.txt_app_main_namespace.insert("end-1c", str(data['application_name']))
+            set_textbox(self.txt_app_main_namespace, str(data['application_name']))
 
         if 'module_name' in data:
-            self.txt_module_sub_namespace.delete(1.0, "end-1c")
-            self.txt_module_sub_namespace.insert("end-1c", str(data['module_name']))
+            set_textbox(self.txt_module_sub_namespace, str(data['module_name']))
+
+        if 'root_namespace_injected' in data:
+            set_textbox(self.txt_root_namespace_injected, str(data['root_namespace_injected']))
+
+        if 'application_name_injected' in data:
+            set_textbox(self.txt_app_main_namespace_injected, str(data['application_name_injected']))
+
+        if 'module_name_injected' in data:
+            set_textbox(self.txt_module_sub_namespace_injected, str(data['module_name_injected']))
 
         if 'explicit_vcpkg_paercebal' in data:
             self.ck_vcpkg_paercebal_variable.set(data['explicit_vcpkg_paercebal'])
@@ -184,9 +226,13 @@ class main_dialog:
     def fill_and_check_user_data(self):
         self.user_data.m_module_type = self.rb_module_type_variable.get()
         self.user_data.m_parent_directory = self.cb_parent_dir_variable.get()
-        self.user_data.m_root_namespace = self.txt_root_namespace.get("1.0",'end-1c')
-        self.user_data.m_application_name = self.txt_app_main_namespace.get("1.0",'end-1c')
-        self.user_data.m_module_name = self.txt_module_sub_namespace.get("1.0",'end-1c')
+        self.user_data.m_root_namespace = get_textbox(self.txt_root_namespace)
+        self.user_data.m_application_name = get_textbox(self.txt_app_main_namespace)
+        self.user_data.m_module_name = get_textbox(self.txt_module_sub_namespace)
+        self.user_data.m_injected = self.rb_solution_behaviour_variable.get()
+        self.user_data.m_root_namespace_injected = get_textbox(self.txt_root_namespace_injected)
+        self.user_data.m_application_name_injected = get_textbox(self.txt_app_main_namespace_injected)
+        self.user_data.m_module_name_injected = get_textbox(self.txt_module_sub_namespace_injected)
         self.user_data.m_vcpkg_paercebal = self.ck_vcpkg_paercebal_variable.get()
         self.user_data.m_open_explorer = self.ck_open_explorer_variable.get()
         self.user_data.m_message_box_on_finish = self.ck_message_box_on_finish_variable.get()
@@ -216,7 +262,7 @@ class main_dialog:
 
     def open_message_box(self):
         if self.user_data.m_message_box_on_finish:
-            messagebox.showinfo(title='Success', message='Visual Studio Module Generated', type=messagebox.OK)
+            messagebox.showinfo(title='Success', message='Visual Studio Project Generated', type=messagebox.OK)
 
     def main_loop(self):
         self.root.mainloop()
