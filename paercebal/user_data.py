@@ -8,11 +8,15 @@ class user_data:
 
     def __init__(self):
         self.m_models_directory = ""
+        self.m_parent_directory = ""
         self.m_root_namespace = ""
         self.m_application_name = ""
         self.m_module_name = ""
-        self.m_parent_directory = ""
+        self.m_root_namespace_injected = ""
+        self.m_application_name_injected = ""
+        self.m_module_name_injected = ""
         self.m_module_type = ""
+        self.m_injected = False
         self.m_solution_guid = uuid.uuid4()
         self.m_module_guid = uuid.uuid4()
         self.m_vcpkg_paercebal = True
@@ -27,10 +31,17 @@ class user_data:
         return self.m_parent_directory
 
     def get_solution_directory(self):
-        if len(self.m_root_namespace) > 0:
-            return os.path.join(self.m_parent_directory, self.m_root_namespace + '.' + self.m_application_name)
+        if self.m_injected:
+            root_namespace = self.m_root_namespace_injected
+            application_name = self.m_application_name_injected
         else:
-            return os.path.join(self.m_parent_directory, self.m_application_name)
+            root_namespace = self.m_root_namespace
+            application_name = self.m_application_name
+
+        if len(root_namespace) > 0:
+            return os.path.join(self.m_parent_directory, root_namespace + '.' + application_name)
+        else:
+            return os.path.join(self.m_parent_directory, application_name)
 
     def get_relative_module_pure_name(self):
         if len(self.m_root_namespace) > 0:
@@ -75,10 +86,17 @@ class user_data:
             return self.m_application_name + '/' + self.m_module_name
 
     def get_base_project_file_solution_name(self, p_KEY):
-        if len(self.m_root_namespace) > 0:
-            return os.path.join(self.get_solution_directory(), p_KEY, '_' + self.m_root_namespace + '.' + self.m_application_name + '.sln')
+        if self.m_injected:
+            root_namespace = self.m_root_namespace_injected
+            application_name = self.m_application_name_injected
         else:
-            return os.path.join(self.get_solution_directory(), p_KEY, '_' + self.m_application_name + '.sln')
+            root_namespace = self.m_root_namespace
+            application_name = self.m_application_name
+
+        if len(root_namespace) > 0:
+            return os.path.join(self.get_solution_directory(), p_KEY, '_' + root_namespace + '.' + application_name + '.sln')
+        else:
+            return os.path.join(self.get_solution_directory(), p_KEY, '_' + application_name + '.sln')
 
     def get_project_file_project_name(self):
         if len(self.m_root_namespace) > 0:
@@ -286,7 +304,7 @@ class user_data:
         if self.m_vcpkg_paercebal:
             return r'<Import Project="$(PAERCEBAL_VCPKG_DIR)\scripts\buildsystems\msbuild\vcpkg.targets" />'
         else:
-            return ''
+            return r'<!-- <Import Project="$(PAERCEBAL_VCPKG_DIR)\scripts\buildsystems\msbuild\vcpkg.targets" /> -->'
 
     def get_additional_include_directories(self):
         s = ''
