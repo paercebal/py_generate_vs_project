@@ -254,3 +254,10 @@ def create_file_vcxproj_filters(p_user_data):
         with open(dst, "w") as file:
             file.write(data)
 
+def create_gitignore_as_needed(p_user_data):
+    src = os.path.join(p_user_data.get_models_directory(), "gitignore.txt")
+    dst = os.path.join(p_user_data.get_solution_directory(), ".gitignore")
+    my_file = Path(dst)
+    # create dst file if it does not already exist
+    if not my_file.is_file():
+        shutil.copy(src, dst)
