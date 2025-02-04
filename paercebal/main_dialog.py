@@ -255,6 +255,7 @@ class main_dialog:
         paercebal.file_text.create_update_file_sln_as_needed(self.user_data)
         paercebal.file_text.create_file_vcxproj(self.user_data)
         paercebal.file_text.create_file_vcxproj_filters(self.user_data)
+        paercebal.file_text.create_gitignore_as_needed(self.user_data)
 
     def open_explorer(self):
         if self.user_data.m_open_explorer:

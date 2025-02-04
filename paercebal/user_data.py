@@ -27,6 +27,9 @@ class user_data:
     def update_solution_guid(self, p_uuid):
         self.m_solution_guid = p_uuid
 
+    def get_models_directory(self):
+        return self.m_models_directory
+
     def get_parent_directory(self):
         return self.m_parent_directory
 
