@@ -83,7 +83,7 @@ def create_main_source(p_user_data):
         data = data.replace('RBRBRBR_MAIN_FILE_SFML_INCLUDE_RBRBRBR', '#include <SFML/Graphics.hpp>')
         data = data.replace('RBRBRBR_MAIN_FILE_GTEST_INCLUDE_RBRBRBR', '')
         data = data.replace('RBRBRBR_WINMAIN_REDIRECTOR_TO_MAIN_RBRBRBR', p_user_data.get_winmain_redirector_to_main())
-        data = data.replace('RBRBRBR_MAIN_FUNCTION_BODY_RBRBRBR', p_user_data.get_sfml2_main_content())
+        data = data.replace('RBRBRBR_MAIN_FUNCTION_BODY_RBRBRBR', p_user_data.get_sfml3_main_content())
     elif p_user_data.is_module_a("GTestEXE"):
         data = data.replace('RBRBRBR_MAIN_FILE_HEADER_INCLUDE_RBRBRBR', dst_header_include)
         data = data.replace('RBRBRBR_MAIN_FILE_SFML_INCLUDE_RBRBRBR', '')
