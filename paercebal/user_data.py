@@ -364,4 +364,31 @@ class user_data:
         s += '   return 0;'
         return s
 
+    def get_sfml3_main_content(self):
+        s = ''
+        s += '   sf::Window window;\n'
+        s += '   window.create(sf::VideoMode({800, 600}), "My SFML3 window");\n'
+        s += '   window.setVerticalSyncEnabled(true); // call it once, after creating the window\n'
+        s += '   window.setFramerateLimit(60); // call it once, after creating the window\n'
+        s += '\n'
+        s += '   while (window.isOpen())\n'
+        s += '   {\n'
+        s += '      while (const std::optional event = window.pollEvent())\n'
+        s += '      {\n'
+        s += '         if (event->is<sf::Event::Closed>())\n'
+        s += '         {\n'
+        s += '            window.close();\n'
+        s += '         }\n'
+        s += '         else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())\n'
+        s += '         {\n'
+        s += '            if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)\n'
+        s += '            {\n'
+        s += '               window.close();\n'
+        s += '            }\n'
+        s += '         }\n'
+        s += '      }\n'
+        s += '   }\n'
+        s += '\n'
+        s += '   return 0;\n'
+        return s
 
