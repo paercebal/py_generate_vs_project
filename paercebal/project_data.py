@@ -6,6 +6,8 @@ import uuid
 class project_data:
 
     def __init__(self):
+        self.m_use_sln = False
+        self.m_use_slnx = False
         self.m_solution_directory = None
         self.m_is_visual_studio = False
         self.m_is_gcc = False
@@ -29,12 +31,15 @@ def get_all_project_data():
     d[pd.m_solution_directory] = pd
     pd = project_data_vs_2022()
     d[pd.m_solution_directory] = pd
+    pd = project_data_vs_2026()
+    d[pd.m_solution_directory] = pd
     return d
 
 
 def project_data_vs_2017():
 
     pd = project_data()
+    pd.m_use_sln = True
     pd.m_solution_directory = "_vs2017"
     pd.m_is_visual_studio = True
     pd.m_sln_title = "Microsoft Visual Studio Solution File, Format Version 12.00"
@@ -54,6 +59,7 @@ def project_data_vs_2017():
 def project_data_vs_2019():
 
     pd = project_data()
+    pd.m_use_sln = True
     pd.m_solution_directory = "_vs2019"
     pd.m_is_visual_studio = True
     pd.m_sln_title = "Microsoft Visual Studio Solution File, Format Version 12.00"
@@ -73,6 +79,7 @@ def project_data_vs_2019():
 def project_data_vs_2022():
 
     pd = project_data()
+    pd.m_use_sln = True
     pd.m_solution_directory = "_vs2022"
     pd.m_is_visual_studio = True
     pd.m_sln_title = "Microsoft Visual Studio Solution File, Format Version 12.00"
@@ -82,6 +89,26 @@ def project_data_vs_2022():
     pd.m_vcproj_project_tools_version = "15.0"
     pd.m_vcproj_windows_target_platform_version = "<VCProjectVersion>16.0</VCProjectVersion>\n<WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>"
     pd.m_vcproj_project_platform_toolset = "<PlatformToolset>v143</PlatformToolset>"
+    pd.m_language_standard = "<LanguageStandard>stdcpplatest</LanguageStandard>"
+    pd.m_sdl_check = "<SDLCheck>true</SDLCheck>"
+    pd.m_conformance_mode = "<ConformanceMode>true</ConformanceMode>"
+
+    return pd
+
+
+def project_data_vs_2026():
+
+    pd = project_data()
+    pd.m_use_slnx = True
+    pd.m_solution_directory = "_vs2026"
+    pd.m_is_visual_studio = True
+    pd.m_sln_title = ""
+    pd.m_sln_version = ""
+    pd.m_sln_global_section_post_solution = ""
+
+    pd.m_vcproj_project_tools_version = "15.0"
+    pd.m_vcproj_windows_target_platform_version = "<VCProjectVersion>18.0</VCProjectVersion>\n<WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>"
+    pd.m_vcproj_project_platform_toolset = "<PlatformToolset>v145</PlatformToolset>"
     pd.m_language_standard = "<LanguageStandard>stdcpplatest</LanguageStandard>"
     pd.m_sdl_check = "<SDLCheck>true</SDLCheck>"
     pd.m_conformance_mode = "<ConformanceMode>true</ConformanceMode>"

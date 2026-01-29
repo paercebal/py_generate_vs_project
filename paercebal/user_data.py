@@ -73,6 +73,9 @@ class user_data:
     def get_vs2022_directory(self):
         return self.get_project_files_directory('_vs2022')
 
+    def get_vs2026_directory(self):
+        return self.get_project_files_directory('_vs2026')
+
     def get_gcc_directory(self):
         return self.get_project_files_directory('_gcc_cpp')
 
@@ -88,7 +91,7 @@ class user_data:
         else:
             return self.m_application_name + '/' + self.m_module_name
 
-    def get_base_project_file_solution_name(self, p_KEY):
+    def get_base_project_file_solution_name_with_extension(self, p_KEY, p_extension):
         if self.m_injected:
             root_namespace = self.m_root_namespace_injected
             application_name = self.m_application_name_injected
@@ -97,9 +100,15 @@ class user_data:
             application_name = self.m_application_name
 
         if len(root_namespace) > 0:
-            return os.path.join(self.get_solution_directory(), p_KEY, '_' + root_namespace + '.' + application_name + '.sln')
+            return os.path.join(self.get_solution_directory(), p_KEY, '_' + root_namespace + '.' + application_name + '.' + p_extension)
         else:
-            return os.path.join(self.get_solution_directory(), p_KEY, '_' + application_name + '.sln')
+            return os.path.join(self.get_solution_directory(), p_KEY, '_' + application_name + '.' + p_extension)
+
+    def get_base_project_file_solution_name(self, p_KEY):
+        return self.get_base_project_file_solution_name_with_extension(p_KEY, "sln")
+
+    def get_base_project_file_solutionx_name(self, p_KEY):
+        return self.get_base_project_file_solution_name_with_extension(p_KEY, "slnx")
 
     def get_project_file_project_name(self):
         if len(self.m_root_namespace) > 0:
@@ -290,6 +299,9 @@ class user_data:
     def get_sln_model_name(self):
         return os.path.join(self.m_models_directory, 'vs2010.sln')
 
+    def get_slnx_model_name(self):
+        return os.path.join(self.m_models_directory, 'vs2026.slnx')
+
     def get_vcproj_model_name(self):
         return os.path.join(self.m_models_directory, 'vs2010.vcxproj')
 
@@ -301,6 +313,13 @@ class user_data:
         s += ' = "' + self.get_project_file_project_name() + '"'
         s += ', "' + self.get_project_file_project_name_with_suffix('vcxproj') + '"'
         s += ', "' + str(self.m_module_guid) + '"'
+        return s
+
+    def get_slnx_project_line(self):
+        s = '  <Project'
+        s += ' Path="' + self.get_project_file_project_name_with_suffix('vcxproj') + '"'
+        s += ' Id="' + str(self.m_module_guid) + '"'
+        s += ' />'
         return s
 
     def get_vcpkg_paercebal(self):

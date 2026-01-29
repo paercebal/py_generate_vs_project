@@ -98,10 +98,15 @@ def create_main_source(p_user_data):
 
 
 def create_update_file_sln_as_needed(p_user_data):
+    
     pds = p_user_data.get_all_project_data()
     src = p_user_data.get_sln_model_name()
 
     for k, v in pds.items():
+        
+        if not v.m_use_sln:
+            continue
+        
         dst = p_user_data.get_base_project_file_solution_name(k)
         my_file = Path(dst)
 
@@ -148,6 +153,36 @@ def create_update_file_sln_as_needed(p_user_data):
         with open(dst, "w") as file:
             file.write(data)
 
+
+def create_update_file_slnx_as_needed(p_user_data):
+    pds = p_user_data.get_all_project_data()
+    src = p_user_data.get_slnx_model_name()
+
+    for k, v in pds.items():
+
+        if not v.m_use_slnx:
+            continue
+        
+        dst = p_user_data.get_base_project_file_solutionx_name(k)
+        my_file = Path(dst)
+
+        # create dst file if it does not already exist
+        if not my_file.is_file():
+            shutil.copy(src, dst)
+
+        # here, we know dst file already exists, and only needs update
+        project_line = p_user_data.get_slnx_project_line()
+
+        solution_end_tag_re = r'</Solution>'
+        solution_end_tag = r'</Solution>'
+
+        with open(dst, 'r') as file:
+            data = file.read()
+
+        data = re.sub(solution_end_tag_re, project_line + '\r\n' + solution_end_tag, data, flags=re.MULTILINE)
+
+        with open(dst, "w") as file:
+            file.write(data)
 
 def create_file_vcxproj(p_user_data):
     pds = p_user_data.get_all_project_data()
