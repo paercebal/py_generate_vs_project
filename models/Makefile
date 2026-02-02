@@ -2,73 +2,121 @@
 CPPC=RBRBR_CPPC_RBRBRBR
 CPPC_VERSION_OPTION=RBRBR_CPPC_VERSION_OPTION_RBRBRBR
 CPPC_VERSION_DIRECTORY=RBRBR_CPPC_VERSION_DIRECTORY_RBRBRBR
-NAMESPACE_NAME=RBRBRBR_NAMESPACE_NAME_RBRBRBR
-MODULE_NAME=RBRBRBR_MODULE_NAME_RBRBRBR
+MODULE_FILENAME=RBRBRBR_MODULE_FILENAME_RBRBRBR
+MODULE_DIRECTORY_TREE=RBRBRBR_MODULE_DIRECTORY_TREE_RBRBRBR
+
+
+DIRECTORY_BASE=..
+DIRECTORY_PRIVATE=$(MODULE_FILENAME)/private
+DIRECTORY_PUBLIC=$(MODULE_FILENAME)/public
+
+FILES_DIRECTORY_PRIVATE=$(DIRECTORY_PRIVATE)/$(MODULE_DIRECTORY_TREE)
+FILES_DIRECTORY_PUBLIC=$(DIRECTORY_PUBLIC)/$(MODULE_DIRECTORY_TREE)
 
 # TODO: Enter the files here
 #   remember that "../" will be prepended as the Makefile is inside a directory
 #       inside the root
 #   so you need to put the full path from there.
-HEADERS=$(NAMESPACE_NAME).$(MODULE_NAME)/main.hpp
-SOURCES=$(NAMESPACE_NAME).$(MODULE_NAME)/main.cpp
+HEADERS_LIST=$(FILES_DIRECTORY_PRIVATE)/main.hpp
+SOURCES_LIST=$(FILES_DIRECTORY_PRIVATE)/main.cpp
 
+PATH_HEADERS_LIST=$(foreach file,$(HEADERS_LIST),$(DIRECTORY_BASE)/$(file))
+PATH_SOURCES_LIST=$(foreach file,$(SOURCES_LIST),$(DIRECTORY_BASE)/$(file))
 
 
 # macro definitions
-CPPC_CFLAGS=-c -Wall $(CPPC_VERSION_OPTION)
+CPPC_CFLAGS=-c -Wall -Wextra -pedantic $(CPPC_VERSION_OPTION)
 CPPC_LFLAGS=
-DIRECTORY_BASE=..
-DIRECTORY_OBJ=__obj/$(NAMESPACE_NAME).$(MODULE_NAME)/gcc_$(CPPC_VERSION_DIRECTORY)
-DIRECTORY_BIN=../__bin/gcc_$(CPPC_VERSION_DIRECTORY)
-PROJECT_EXE=$(NAMESPACE_NAME).$(MODULE_NAME).exe
+PATH_DIRECTORY_OBJ=$(DIRECTORY_BASE)/__obj/$(MODULE_FILENAME)/$(CPPC_VERSION_DIRECTORY)
+PATH_DIRECTORY_BIN=$(DIRECTORY_BASE)/__bin/$(CPPC_VERSION_DIRECTORY)
+PROJECT_EXE=$(MODULE_FILENAME).exe
 
-FILE_CONMANIP=RBRBR_FILE_CONMANIP_RBRBRBR
-FILE_GTEST=RBRBR_FILE_GTEST_RBRBRBR
-FILE_DEPENDENCIES=RBRBR_FILE_DEPENDENCIES_RBRBRBR
-FILE_DEPENDENCIES_FULL=RBRBR_FILE_DEPENDENCIES_FULL_RBRBRBR
+INCLUDES_ALL=-I$(DIRECTORY_BASE)/$(DIRECTORY_PUBLIC) -I$(DIRECTORY_BASE)/$(DIRECTORY_PRIVATE)
 
-
-HEADERS_FULL=$(foreach header,$(HEADERS),$(DIRECTORY_BASE)/$(header))
+OBJECTS_LIST=$(subst .cpp,.obj,$(SOURCES_LIST))
+PATH_OBJECTS_LIST=$(foreach file,$(OBJECTS_LIST),$(PATH_DIRECTORY_OBJ)/$(file))
 
 
-OBJECTS_TMP=$(subst .cpp,.obj,$(SOURCES))
-OBJECTS=$(foreach obj,$(OBJECTS_TMP),$(DIRECTORY_OBJ)/$(obj))
-OBJECTS_FULL=$(foreach file,$(OBJECTS),$(DIRECTORY_BASE)/$(file))
+
+all: do_lines create_directories object_files executable_file launching_executable_file
 
 
-all: create_directories object_files executable_file launching_executable_file
 
-
+.PHONY: clean
 clean:
-	rm -f $(DIRECTORY_BIN)/$(PROJECT_EXE) $(OBJECTS_FULL)
+	@rm -f $(PATH_DIRECTORY_BIN)/$(PROJECT_EXE) $(PATH_OBJECTS_LIST)
+
+
+
+do_lines :
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info )
+	$(info ==========================================================)
+
 
 
 create_directories :
-	mkdir -p $(DIRECTORY_BASE)/$(DIRECTORY_OBJ)/$(NAMESPACE_NAME).$(MODULE_NAME)
-	mkdir -p $(DIRECTORY_BIN)
+	@mkdir -p $(PATH_DIRECTORY_OBJ)/$(FILES_DIRECTORY_PRIVATE)
+	@mkdir -p $(PATH_DIRECTORY_OBJ)/$(FILES_DIRECTORY_PUBLIC)
+	@mkdir -p $(PATH_DIRECTORY_BIN)
+	$(info )
+
 
 
 launching_executable_file :
-	$(DIRECTORY_BIN)/$(PROJECT_EXE)
+	$(info )
+	$(info ==========================================================)
+	$(info )
+	$(info EXECUTING $(PATH_DIRECTORY_BIN)/$(PROJECT_EXE))
+	$(info )
+	$(info ==========================================================)
+	$(info )
+	@$(PATH_DIRECTORY_BIN)/$(PROJECT_EXE)
 
 
-executable_file : $(DIRECTORY_BIN)/$(PROJECT_EXE)
+
+executable_file : $(PATH_DIRECTORY_BIN)/$(PROJECT_EXE)
 
 
-object_files : $(OBJECTS_FULL)
+
+$(PATH_DIRECTORY_OBJ)/%.obj : $(DIRECTORY_BASE)/%.cpp $(PATH_HEADERS_LIST)
+#	$(info TARGET="$@")
+#	$(info PREREQ="$<")
+#	$(info PATH_DIRECTORY_OBJ="$(PATH_DIRECTORY_OBJ)")
+	$(info COMPILING $<)
+	$(info )
+	@$(CPPC) $(CPPC_CFLAGS) $(INCLUDES_ALL) $< -o $@
 
 
-$(DIRECTORY_BIN)/$(PROJECT_EXE) : $(OBJECTS_FULL)
+
+object_files : $(PATH_OBJECTS_LIST)
+	$(info )
+
+
+
+$(PATH_DIRECTORY_BIN)/$(PROJECT_EXE) : $(PATH_OBJECTS_LIST)
+	$(info LINKING $<)
+	$(info )
 	$(CPPC) $(CPPC_LFLAGS) $^ -o $@
 
 
-$(FILE_DEPENDENCIES_FULL) :
-
-
-$(HEADERS_FULL) :
-
 	
-$(DIRECTORY_BASE)/$(DIRECTORY_OBJ)/%.obj : $(DIRECTORY_BASE)/%.cpp $(FILE_DEPENDENCIES_FULL) $(HEADERS_FULL)
-	$(CPPC) $(CPPC_CFLAGS) -I.. $< -o $@
-
-
+$(DIRECTORY_BASE)/%.cpp : 
+	$(info )

@@ -252,6 +252,7 @@ class main_dialog:
     def generate_files(self):
         paercebal.file_text.create_main_header(self.user_data)
         paercebal.file_text.create_main_source(self.user_data)
+        paercebal.file_text.create_update_Makefile_as_needed(self.user_data)
         paercebal.file_text.create_update_file_sln_as_needed(self.user_data)
         paercebal.file_text.create_update_file_slnx_as_needed(self.user_data)
         paercebal.file_text.create_file_vcxproj(self.user_data)
