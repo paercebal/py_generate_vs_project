@@ -46,6 +46,15 @@ class user_data:
         else:
             return os.path.join(self.m_parent_directory, application_name)
 
+    def get_module_namespace(self):
+        if len(self.m_root_namespace) > 0:
+            return self.m_root_namespace + '.' + self.m_application_name
+        else:
+            return self.m_application_name
+
+    def get_module_name_unqualified(self):
+        return self.m_module_name
+
     def get_relative_module_pure_name(self):
         if len(self.m_root_namespace) > 0:
             return self.m_root_namespace + '.' + self.m_application_name + '.' + self.m_module_name
@@ -76,6 +85,15 @@ class user_data:
     def get_vs2026_directory(self):
         return self.get_project_files_directory('_vs2026')
 
+    def get_gcc20_directory(self):
+        return self.get_project_files_directory('_gcc20')
+
+    def get_gcc23_directory(self):
+        return self.get_project_files_directory('_gcc23')
+
+    def get_gcc26_directory(self):
+        return self.get_project_files_directory('_gcc26')
+
     def get_gcc_directory(self):
         return self.get_project_files_directory('_gcc_cpp')
 
@@ -90,6 +108,21 @@ class user_data:
             return self.m_root_namespace + '/' + self.m_application_name + '/' + self.m_module_name
         else:
             return self.m_application_name + '/' + self.m_module_name
+
+    def get_module_directory_tree(self):
+        if len(self.m_root_namespace) > 0:
+            return self.m_root_namespace + '/' + self.m_application_name + '/' + self.m_module_name
+        else:
+            return self.m_application_name + '/' + self.m_module_name
+
+    def get_Makefile_name(self, p_KEY):
+        if self.m_injected:
+            root_namespace = self.m_root_namespace_injected
+            application_name = self.m_application_name_injected
+        else:
+            root_namespace = self.m_root_namespace
+            application_name = self.m_application_name
+        return os.path.join(self.get_solution_directory(), p_KEY, 'Makefile')
 
     def get_base_project_file_solution_name_with_extension(self, p_KEY, p_extension):
         if self.m_injected:
@@ -175,6 +208,12 @@ class user_data:
 
     def is_module_library(self):
         return self.m_module_type == 'DLL'
+
+    def is_available_for_Makefile(self):
+        if self.m_module_type == 'ConsoleEXE':
+            return True
+        return False
+
 
     def get_subsystem_preprocessor_definition(self):
         if self.m_module_type == 'ConsoleEXE':
@@ -296,6 +335,9 @@ class user_data:
         else:
             return self.m_application_name + '::' + self.m_module_name
 
+    def get_Makefile_model_name(self):
+        return os.path.join(self.m_models_directory, 'Makefile')
+
     def get_sln_model_name(self):
         return os.path.join(self.m_models_directory, 'vs2010.sln')
 
@@ -355,7 +397,7 @@ class user_data:
 
     def get_console_main_content(self):
         s = ''
-        s += '   std::cout << "Hello World";'
+        s += '   std::cout << "Hello World\\n";\n'
         return s
 
     def get_sfml2_main_content(self):

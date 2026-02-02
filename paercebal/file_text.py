@@ -3,6 +3,7 @@ from pathlib import Path
 import re
 import shutil
 import uuid
+from tkinter import messagebox
 
 
 def create_define(p_name):
@@ -97,6 +98,52 @@ def create_main_source(p_user_data):
         file.write(data)
 
 
+def create_update_Makefile_as_needed(p_user_data):
+    
+    if not p_user_data.is_available_for_Makefile():
+        return
+    
+    pds = p_user_data.get_all_project_data()
+    src = p_user_data.get_Makefile_model_name()
+    module_filename = p_user_data.get_relative_module_directory()
+    module_directory_tree = p_user_data.get_module_directory_tree()
+
+    for k, v in pds.items():
+        
+        if not v.m_is_gcc:
+            continue
+        
+        dst = p_user_data.get_Makefile_name(k)
+        my_file = Path(dst)
+
+
+        # create dst file if it does not already exist
+        if not my_file.is_file():
+            shutil.copy(src, dst)
+
+            with open(dst, 'r') as file:
+                data = file.read()
+
+            data = re.sub('RBRBR_CPPC_RBRBRBR', v.m_gcc_compiler, data)
+            data = re.sub('RBRBR_CPPC_VERSION_OPTION_RBRBRBR', v.m_language_standard, data)
+            data = re.sub('RBRBR_CPPC_VERSION_DIRECTORY_RBRBRBR', v.m_solution_directory, data)
+            
+
+            with open(dst, "w") as file:
+                file.write(data)
+
+
+        # here, we know dst file already exists, and only needs update
+        with open(dst, 'r') as file:
+            data = file.read()
+
+        data = re.sub('RBRBRBR_MODULE_FILENAME_RBRBRBR', module_filename, data)
+        data = re.sub('RBRBRBR_MODULE_DIRECTORY_TREE_RBRBRBR', module_directory_tree, data)
+
+        with open(dst, "w") as file:
+            file.write(data)
+
+
 def create_update_file_sln_as_needed(p_user_data):
     
     pds = p_user_data.get_all_project_data()
@@ -163,6 +210,8 @@ def create_update_file_slnx_as_needed(p_user_data):
         if not v.m_use_slnx:
             continue
         
+        # messagebox.showinfo(title='Success', message='SLNX: '+k, type=messagebox.OK)
+        
         dst = p_user_data.get_base_project_file_solutionx_name(k)
         my_file = Path(dst)
 
@@ -199,6 +248,10 @@ def create_file_vcxproj(p_user_data):
     files_declared_in_vcxproj += '  </ItemGroup>'
 
     for k, v in pds.items():
+        
+        if not v.m_use_vcxproj:
+            continue
+        
         dst = p_user_data.get_full_project_file_project_name(k, 'vcxproj')
         my_file = Path(dst)
 
@@ -235,6 +288,10 @@ def create_file_vcxproj_filters(p_user_data):
     src_file = p_user_data.get_main_module_file_name_for_vcproj(False)
 
     for k, v in pds.items():
+
+        if not v.m_use_vcxproj:
+            continue
+        
         dst = p_user_data.get_full_project_file_project_name(k, 'vcxproj.filters')
         my_file = Path(dst)
 
